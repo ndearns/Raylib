@@ -6,11 +6,13 @@ A C++ class that provides an object-oriented facade for the raylib library.
 
 Add `object Raylib [archetypes='provided';];` to the <domain.name>.dml file for your domain.
 
-Create and instance of the Raylib object in your model code: `let ui : Raylib = new Raylib;`
+Create an instance of the Raylib object in your model code: `let ui : Raylib = new Raylib;`
 
 Link it to the object that owns the UI: `call the_harness.ui_link( ui );`
 
 Thereafter, access raylib capabilities thru the link: `Call self.ui().turn_logging_off();`
+
+Here's an extract from the TileUI domain's Harness object:
 
 ```
 object Harness
@@ -34,7 +36,7 @@ object Harness
     {
         call self.ui().turn_logging_off();
         call self.ui().init_window( mdx()*tdx(), mdy()*tdy(), 'Harness' );
-        call self.ui().set_target_fps( 60 );
+        call self.ui().set_target_fps( 200 );
     ...
     }
 ...
@@ -42,7 +44,7 @@ object Harness
 ```
 # makefile
 
-Note the dependecies on raylib and other graphical libraries:
+Note the dependencies on raylib and other graphical libraries:
 
 ```
 CC       = g++
@@ -54,13 +56,13 @@ DML_OBJS = Mosaic.dml TileSet.dml Tile.dml PlacedTile.dml Harness.dml
 CPP_OBJS = $(DML_OBJS:.dml=.cpp)
 H_OBJS   = $(DML_OBJS:.dml=.h)
 LIB_OBJS = $(CPP_OBJS:.cpp=.o)
-*** 
+#--------------------------------------------------------------------------- 
 INC_DIRS = -I${DML}/SWA \
 		   -I${DML}/Raylib
 LIBS     = -L${DML}/SWA -lSWA\
 		   -L${DML}/Raylib -lRaylib\
 		   -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
-***
+#--------------------------------------------------------------------------- 
 lib: $(filter-out Harness.o,$(LIB_OBJS)) $(DOM_NAME)Provided.h
 	ar -rcs lib$(DOM_NAME).a $(filter-out Harness.o,$(LIB_OBJS))
 
